@@ -1,22 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from '../../Hooks/useForm';
 import { useRegister } from '../../Hooks/useRegister';
 import { Link, useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { MenuItem, Typography, Container, Paper, Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import  CircularProgress  from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import  MenuItem  from '@mui/material/TextField';
+import Box  from '@mui/material/Box';
 import { User } from '../../utils/interfaces/types';
+import { delayPromise } from '../../utils/delay/delayPromise';
 
 const RegisterPage: React.FC = () => {
   const { values, handleChange } = useForm({ username: '', password: '', role: 'user', name: '', address: '', phoneNumber: '' });
   const { register, loading, error } = useRegister();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    setIsLoading(true);
     const user = { ...values, role: values.role as 'admin' | 'user' };
     await register(user);
+    await delayPromise(); 
+    setIsLoading(false);
     navigate('/login');
   };
 
@@ -95,16 +104,16 @@ const RegisterPage: React.FC = () => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={loading}
+              disabled={isLoading}
               style={{ marginTop: '16px' }}
             >
-              Register
+              {isLoading ? <CircularProgress size={24} /> : 'Register'}
             </Button>
           </form>
           <Typography variant="body2" sx={{ marginTop: 1 }}>
             Already registered? <Link to="/login">Click here</Link>
           </Typography>
-          {error && <Typography color="error">{error}</Typography>}
+          {error && <Typography color="error" sx={{ marginTop: 1 }}>{error}</Typography>}
         </Box>
       </Paper>
     </Container>

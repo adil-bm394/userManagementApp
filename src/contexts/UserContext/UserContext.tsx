@@ -29,7 +29,7 @@ const initialState: UserState = {
   users: [],
 };
 
-const UserContext = createContext<UserContextProps | undefined>(undefined);
+export const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 const userReducer = (state: UserState, action: UserAction): UserState => {
   switch (action.type) {
@@ -80,10 +80,3 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export const useUserContext = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error('useUserContext must be used within a UserProvider');
-  }
-  return context;
-};

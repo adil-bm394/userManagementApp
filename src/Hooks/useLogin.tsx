@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../contexts/useAuth';
+import { useAuth } from '../contexts/AuthContext/useAuth';
 import { getAllUsersFromDB } from '../db/users/getAllUsersFromDB';
 
 export const useLogin = () => {

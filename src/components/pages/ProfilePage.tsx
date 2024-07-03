@@ -1,13 +1,20 @@
-
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { User } from '../../utils/interfaces/types';
-import { TextField, Button, Container, Paper, Typography } from '@mui/material';
-import { useUserContext } from '../../contexts/UserContext/UserContext';
+import  Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import  CircularProgress  from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import { useUserContext } from '../../contexts/UserContext/useUserContext';
+import { useAuth } from '../../contexts/AuthContext/useAuth';
 
 const ProfilePage: React.FC = () => {
-  const { id } = useParams<{ id?: string }>(); 
+  const navigate = useNavigate();
+  const { id } = useParams<{ id?: string }>();
   const { getUser, updateUser } = useUserContext();
+  const { state: authState } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState<User>({
     id: '',
@@ -18,6 +25,7 @@ const ProfilePage: React.FC = () => {
     address: '',
     phoneNumber: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,13 +55,21 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       if (id) {
-        await updateUser(formData); 
-        setUser(formData); 
+        await updateUser(formData);
+        setUser(formData);
         alert('Profile updated successfully!');
+        if (authState.user?.role === 'admin') {
+          navigate('/user-list');
+        } else {
+          navigate(`/user/${formData.id}`);
+        }
       }
     } catch (error) {
       console.error('Error updating profile:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,7 +80,9 @@ const ProfilePage: React.FC = () => {
   return (
     <Container maxWidth="xs" sx={{ marginTop: '30px' }}>
       <Paper elevation={3} style={{ padding: '16px' }}>
-        <Typography variant="h4" gutterBottom align="center">Profile</Typography>
+        <Typography variant="h4" gutterBottom align="center">
+          Profile
+        </Typography>
         <TextField
           fullWidth
           margin="dense"
@@ -106,9 +124,10 @@ const ProfilePage: React.FC = () => {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
+          disabled={isLoading}
           style={{ marginTop: '16px' }}
         >
-          Save Changes
+          {isLoading ? <CircularProgress size={24} /> : 'Save Changes'}
         </Button>
       </Paper>
     </Container>
