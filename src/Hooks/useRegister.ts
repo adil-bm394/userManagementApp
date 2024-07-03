@@ -13,6 +13,11 @@ export const useRegister = () => {
 
     try {
       const users = await getAllUsersFromDB();
+      if (users.length >= 6) {
+        setError("5 Users already registered");
+        console.log("5 Users already registered");
+        return;
+      }
       const id = (users.length + 1).toString();
       const user = { ...newUser, id };
       await addUserToDB(user);
