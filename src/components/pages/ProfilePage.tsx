@@ -62,9 +62,7 @@ const ProfilePage: React.FC = () => {
         alert('Profile updated successfully!');
         if (authState.user?.role === 'admin') {
           navigate('/user-list');
-        } else {
-          navigate(`/user/${formData.id}`);
-        }
+        } 
       }
     } catch (error) {
       console.error('Error updating profile:', error);

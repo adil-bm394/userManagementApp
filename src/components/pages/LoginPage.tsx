@@ -27,7 +27,7 @@ const LoginPage: React.FC = () => {
       if (user.role === 'admin') {
         navigate('/user-list'); 
       } else {
-        navigate(`/user/${user.id}`);
+        navigate(`/profile/${user.id}`);
       }
     }
     setIsLoading(false);

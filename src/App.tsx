@@ -7,7 +7,6 @@ import Login from './components/pages/LoginPage';
 import RegisterPage from './components/pages/RegisterPage';
 import ProfilePage from './components/pages/ProfilePage';
 import UsersListPage from './components/pages/UsersListPage';
-import ShowUserDetailPage from './components/pages/ShowUserDetailPage';
 import Header from './components/commons/Header';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './routes/AdminRoute';
@@ -24,8 +23,6 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile/:id" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-            <Route path="/user/:id" element={<PrivateRoute><ShowUserDetailPage /></PrivateRoute>} />
-            <Route path="/user/profile/:id" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
             <Route path="/user-list" element={<AdminRoute><UsersListPage /></AdminRoute>} />
             <Route path="/" element={<Navigate to="/login" />} />
           </Routes>

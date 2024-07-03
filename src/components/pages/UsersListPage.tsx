@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext/useAuth';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import  CircularProgress  from '@mui/material/CircularProgress';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Box  from '@mui/material/Box';
-import List from '@mui/material/List';
+import {
+  Button,
+  Typography,
+  CircularProgress,
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Avatar,
+} from '@mui/material';
 import { useUserContext } from '../../contexts/UserContext/useUserContext';
-import {  ListItem, ListItemText } from '@mui/material';
 import { delayPromise } from '../../utils/delay/delayPromise';
-
 
 const UsersListPage: React.FC = () => {
   const { state: authState } = useAuth();
   const { state: userState, fetchUsers } = useUserContext();
-  const [loadingUserId, setLoadingUserId] = useState<string | null>(null); 
+  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,32 +40,49 @@ const UsersListPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ marginTop: '30px' }}>
-      <Paper elevation={3} style={{ padding: '16px' }}>
+    <Container maxWidth="md" sx={{marginTop:'6px'}}>
+      <Paper elevation={3} sx={{ padding: '8px', borderRadius: '8px' }}>
         <Typography variant="h4" gutterBottom align="center">
           Users List
         </Typography>
-        <List>
-          {userState.users.map((user) => (
-            <ListItem key={user.id} sx={{ alignItems: 'center' }}>
-              <ListItemText
-                primary={`Username: ${user.username}`}
-                secondary={`Name: ${user.name}, Address: ${user.address}, Phone: ${user.phoneNumber}`}
-              />
-              <Box display="flex" alignItems="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleEditButton(user.id)}
-                  style={{ marginLeft: '16px' }}
-                  disabled={loadingUserId === user.id} // Disable button when loading
-                >
-                  {loadingUserId === user.id ? <CircularProgress size={24} /> : 'Edit'}
-                </Button>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Avatar</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Address</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userState.users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <Avatar>{user.username.charAt(0).toUpperCase()}</Avatar>
+                  </TableCell>
+                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.address}</TableCell>
+                  <TableCell>{user.phoneNumber}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleEditButton(user.id)}
+                      sx={{ marginLeft: '16px' }}
+                      disabled={loadingUserId === user.id}
+                    >
+                      {loadingUserId === user.id ? <CircularProgress size={24} /> : 'Edit'}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Paper>
     </Container>
   );
